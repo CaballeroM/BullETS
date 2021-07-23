@@ -112,3 +112,14 @@ class FmpDataSource(DataSourceInterface):
                                 method="POST", body=body)
 
         return int(json.loads(response)['result'])
+
+    def get_market_open_close(self):
+        url = self.URL_BASE_FMP + "is-the-market-open?apikey=" + self.token
+        response = self.request(url)
+        result = json.loads(response)
+        holidays = []
+        for entry in result["stockMarketHolidays"]:
+            del entry["year"]
+            for date in entry.values():
+                holidays.append(datetime.datetime.strptime(date, "%Y-%m-%d"))
+        return holidays

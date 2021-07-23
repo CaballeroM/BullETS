@@ -72,6 +72,11 @@ class Runner:
             elif time.hour == 9 and time.minute < 30:
                 return False
 
+        if self.holidays is None:
+            self.holidays = self.strategy.data_source.get_market_open_close()
+        if datetime(time.year, time.month, time.day, 0, 0, 0) in self.holidays:
+            return False
+
         return True
 
     def post_backtest_log(self):
